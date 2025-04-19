@@ -1,0 +1,94 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Chef Mate</title>
+
+  <!-- Stylesheets -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='style.css') }}">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+
+
+  <style>
+    .macro-chart {
+      text-align: center;
+      margin: 20px 0;
+    }
+    .macro-chart img {
+      width: 300px;
+      border-radius: 10px;
+      box-shadow: 0 0 10px rgba(0,0,0,0.2);
+    }
+
+    .navbar {
+      display: flex;
+      align-items: center;
+      padding: 10px 20px;
+      background: linear-gradient(to right, #fca17d, #f96d6f );
+    }
+    
+    .navbar img {
+      height: 40px;
+      object-fit: contain;
+    }
+  </style>
+</head>
+<body>
+  <div class="navbar">
+    <img src="{{ url_for('static', filename='chat/gradientlogo.png') }}" alt="Logo">
+  </div>
+  
+
+  <div class="container">
+    <main class="main-content">
+      <h1>What's On your plate?</h1>
+
+      <div class="chat-container-wrapper">
+        <div class="chat-container" id="chat">
+          {% for chat in chat_history %}
+            <div class="user-message"><strong>You:</strong> {{ chat.user }}</div>
+            <div class="bot-message"><strong>ChefMate:</strong> {{ chat.bot|safe }}</div>
+
+            {% if chat.macros and chat.macros.chart_path %}
+              <div class="macro-chart">
+                <h4>📊 Macronutrient Pie Chart</h4>
+                <img src="{{ url_for('static', filename='chat/mockchart.png') }}" alt="Macronutrient Chart">
+
+
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      </div>
+
+      <div class="chat-box">
+        <form id="chat-form" method="POST">
+          <input type="text" name="prompt" placeholder="Let's cook together.." required />
+          <select name="cuisine">
+            <option value="">Cuisine</option>
+            <option value="indian">Indian</option>
+            <option value="italian">Italian</option>
+            <option value="thai">Thai</option>
+          </select>
+          <select name="time">
+            <option value="">Time</option>
+            <option value="10">10 min</option>
+            <option value="20">20 min</option>
+            <option value="30">30 min</option>
+          </select>
+          <button type="submit"><i class="fas fa-paper-plane"></i></button>
+        </form>
+      </div>
+
+      <script>
+        const chatContainer = document.getElementById("chat");
+        if (chatContainer) {
+          chatContainer.scrollTop = chatContainer.scrollHeight;
+        }
+      </script>
+    </main>
+  </div>
+</body>
+</html>
