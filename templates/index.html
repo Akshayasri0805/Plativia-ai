@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover"/>
   <title>Chef Mate</title>
 
   <!-- Stylesheets -->
@@ -18,6 +18,7 @@
     }
     .macro-chart img {
       width: 300px;
+      height: auto;
       border-radius: 10px;
       box-shadow: 0 0 10px rgba(0,0,0,0.2);
     }
@@ -32,6 +33,35 @@
     .navbar img {
       height: 40px;
       object-fit: contain;
+      width: auto;
+    }
+
+    /* Responsive form styling */
+    @media (max-width: 768px) {
+      .chat-box form {
+        flex-direction: row;
+        flex-wrap: wrap;
+      }
+
+      .chat-box input[type="text"] {
+        flex: 1 1 100%;
+        min-width: 0;
+      }
+
+      .chat-box select {
+        flex: 1 1 calc(50% - 5px);
+        min-width: 0;
+      }
+
+      .chat-box button {
+        flex: 1 1 100%;
+      }
+    }
+
+    @media (max-width: 480px) {
+      .macro-chart h4 {
+        font-size: 14px;
+      }
     }
   </style>
 </head>
@@ -45,7 +75,7 @@
     <main class="main-content">
       <h1>What's On your plate?</h1>
 
-      <div class="chat-container-wrapper">
+      <div class="chat-container-wrapper" id="chat-wrapper" {% if not chat_history %}style="display: none;"{% endif %}>
         <div class="chat-container" id="chat">
           {% for chat in chat_history %}
             <div class="user-message"><strong>You:</strong> {{ chat.user }}</div>
@@ -60,6 +90,14 @@
               </div>
             {% endif %}
           {% endfor %}
+          <div id="loading-indicator" style="display: none;">
+            <div class="bot-message">
+              <strong>ChefMate:</strong> 
+              <span class="typing-indicator">
+                <span></span><span></span><span></span>
+              </span>
+            </div>
+          </div>
         </div>
       </div>
 
@@ -84,11 +122,38 @@
 
       <script>
         const chatContainer = document.getElementById("chat");
-        if (chatContainer) {
-          chatContainer.scrollTop = chatContainer.scrollHeight;
+        const chatWrapper = document.getElementById("chat-wrapper");
+        const form = document.getElementById("chat-form");
+        const submitButton = form.querySelector("button[type='submit']");
+        const loadingIndicator = document.getElementById("loading-indicator");
+
+        // Auto-scroll to bottom
+        function scrollToBottom() {
+          if (chatContainer) {
+            chatContainer.scrollTop = chatContainer.scrollHeight;
+          }
         }
+
+        // Show loading state when form is submitted
+        form.addEventListener("submit", function(e) {
+          // Show chat wrapper if hidden
+          chatWrapper.style.display = "block";
+          
+          // Show loading indicator
+          loadingIndicator.style.display = "block";
+          submitButton.disabled = true;
+          submitButton.style.opacity = "0.6";
+          submitButton.style.cursor = "not-allowed";
+          
+          // Scroll to show the loading message
+          setTimeout(scrollToBottom, 100);
+        });
+
+        // Scroll to bottom on page load
+        scrollToBottom();
       </script>
     </main>
   </div>
 </body>
 </html>
+

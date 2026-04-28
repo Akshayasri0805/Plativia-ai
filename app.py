@@ -8,7 +8,7 @@ app = Flask(__name__)
 app.secret_key = "supersecretkey123"
 
 # Initialize Gemini
-genai.configure(api_key="AIzaSyBHUaROcHN_uKc7pkDIb57qna3O79wWOWg")  # Replace with your actual key
+genai.configure(api_key="AIzaSyAGuN5nVzmepFDXC0DFSMU3lFuwa5ivq0M")  # Replace with your actual key
 
 def format_recipe_text(text):
     macro_data = {}
@@ -113,7 +113,7 @@ Servings Per Batch:
 Make sure sections are clearly marked as above.
 """
 
-        model = genai.GenerativeModel('models/gemini-1.5-pro')
+        model = genai.GenerativeModel('models/gemini-2.5-flash')
         response = model.generate_content(final_prompt)
         raw_recipe = response.text.strip()
 
