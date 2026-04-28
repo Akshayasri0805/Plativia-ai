@@ -1,6 +1,13 @@
 import google.generativeai as genai
+import os
+from dotenv import load_dotenv
 
-genai.configure(api_key="AIzaSyAjbQSAUfMR_n1A17iyX2IvR6aj2xFMUIA")
+load_dotenv()
+
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY environment variable is not set")
+genai.configure(api_key=api_key)
 
 models = genai.list_models()
 for m in models:

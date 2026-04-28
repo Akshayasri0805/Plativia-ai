@@ -3,12 +3,18 @@ import google.generativeai as genai
 import re
 import os
 import uuid
+from dotenv import load_dotenv
+
+load_dotenv()
 
 app = Flask(__name__)
-app.secret_key = "supersecretkey123"
+app.secret_key = os.getenv('FLASK_SECRET_KEY', 'default-secret-key')
 
 # Initialize Gemini
-genai.configure(api_key="AIzaSyAGuN5nVzmepFDXC0DFSMU3lFuwa5ivq0M")  # Replace with your actual key
+api_key = os.getenv('GOOGLE_API_KEY')
+if not api_key:
+    raise ValueError("GOOGLE_API_KEY environment variable is not set")
+genai.configure(api_key=api_key)
 
 def format_recipe_text(text):
     macro_data = {}
